@@ -1,0 +1,18 @@
+import ArchiveList from "@/app/archive/ArchiveList";
+
+export const metadata = {
+  title: "Archive — Extreme Demonle",
+};
+
+export default function ArchivePage() {
+  return (
+    <div className="mx-auto w-full max-w-xl flex-1 px-4 py-10">
+      <h1 className="text-xl font-bold text-text-primary">Past puzzles</h1>
+      <p className="mt-2 text-[14px] text-text-secondary">
+        Missed a day? Every previous puzzle stays playable.
+      </p>
+
+      <ArchiveList />
+    </div>
+  );
+}

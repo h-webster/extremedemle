@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #ffffff;
+  --color-bg-card: #f1f5f9;
+  --color-bg-card-hover: #e6edf5;
+  --color-border: #d7e0ea;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #4b5a6b;
+  --color-text-muted: #8a97a8;
+
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-ink: #ffffff;
+
+  --color-correct: #15803d;
+  --color-correct-soft: rgba(21, 128, 61, 0.1);
+  --color-danger: #b91c1c;
+  --color-danger-soft: rgba(185, 28, 28, 0.1);
+
+  --font-display: var(--font-poppins);
+  --font-body: var(--font-poppins);
+  --font-mono: var(--font-poppins);
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-card: var(--color-bg-card);
+  --color-bg-card-hover: var(--color-bg-card-hover);
+  --color-border: var(--color-border);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-ink: var(--color-accent-ink);
+  --color-correct: var(--color-correct);
+  --color-correct-soft: var(--color-correct-soft);
+  --color-danger: var(--color-danger);
+  --color-danger-soft: var(--color-danger-soft);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+  border: 2px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Hint flip cards — each hint gets its own color via --hint-color, set inline per card. */
+.hint-card {
+  perspective: 1200px;
+  height: var(--hint-card-height, 92px);
+}
+
+.hint-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.hint-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.hint-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--hint-color);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.hint-face-front {
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.75rem;
+  color: var(--hint-color);
+  background: color-mix(in srgb, var(--hint-color) 6%, var(--color-bg));
+  text-align: center;
+}
+
+.hint-face-back {
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--hint-color) 10%, var(--color-bg));
+  transform: rotateY(180deg);
+}
+
+.hint-face-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--hint-color);
+}
