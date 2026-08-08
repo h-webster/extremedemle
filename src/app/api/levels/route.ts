@@ -10,7 +10,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json<LevelOption[]>([]);
   }
 
-  const pool = await getDailyPool();
+  let pool;
+  try {
+    pool = await getDailyPool();
+  } catch (err) {
+    console.error("GET /api/levels: failed to load pool", err);
+    return NextResponse.json({ error: "Failed to load level pool" }, { status: 502 });
+  }
+
   const starts: LevelOption[] = [];
   const contains: LevelOption[] = [];
 

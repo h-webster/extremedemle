@@ -31,41 +31,47 @@ export async function POST(request: NextRequest) {
   }
 
   const resolvedDate = date ?? todayUTC();
-  const { target, pool } = await getDailyTarget(resolvedDate);
-  const guessed = pool.find((demon) => demon.id === guessLevelId);
 
-  if (!guessed) {
-    return NextResponse.json({ error: "Unknown level for today's pool" }, { status: 400 });
+  try {
+    const { target, pool } = await getDailyTarget(resolvedDate);
+    const guessed = pool.find((demon) => demon.id === guessLevelId);
+
+    if (!guessed) {
+      return NextResponse.json({ error: "Unknown level for today's pool" }, { status: 400 });
+    }
+
+    const correct = guessed.id === target.id;
+    const positionDirection = correct
+      ? "correct"
+      : target.position < guessed.position
+        ? "harder"
+        : "easier";
+
+    const hints = await buildHints(target, guessNumber);
+    const gameOver = correct || guessNumber >= MAX_GUESSES;
+
+    const response: GuessResponse = {
+      correct,
+      guessNumber,
+      guessedLevel: {
+        id: guessed.id,
+        name: guessed.name,
+        position: guessed.position,
+      },
+      positionDirection,
+      hints,
+      gameOver,
+      ...(gameOver
+        ? {
+            reveal: await buildFullReveal(target),
+            completionStats: await recordCompletion(resolvedDate, correct),
+          }
+        : {}),
+    };
+
+    return NextResponse.json(response);
+  } catch (err) {
+    console.error("POST /api/guess failed", err);
+    return NextResponse.json({ error: "Failed to process guess" }, { status: 502 });
   }
-
-  const correct = guessed.id === target.id;
-  const positionDirection = correct
-    ? "correct"
-    : target.position < guessed.position
-      ? "harder"
-      : "easier";
-
-  const hints = await buildHints(target, guessNumber);
-  const gameOver = correct || guessNumber >= MAX_GUESSES;
-
-  const response: GuessResponse = {
-    correct,
-    guessNumber,
-    guessedLevel: {
-      id: guessed.id,
-      name: guessed.name,
-      position: guessed.position,
-    },
-    positionDirection,
-    hints,
-    gameOver,
-    ...(gameOver
-      ? {
-          reveal: await buildFullReveal(target),
-          completionStats: await recordCompletion(resolvedDate, correct),
-        }
-      : {}),
-  };
-
-  return NextResponse.json(response);
 }

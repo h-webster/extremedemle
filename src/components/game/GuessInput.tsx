@@ -30,12 +30,18 @@ export default function GuessInput({ disabled, excludeIds, onSubmit }: GuessInpu
     const handle = setTimeout(async () => {
       try {
         const res = await fetch(`/api/levels?q=${encodeURIComponent(trimmedQuery)}`);
+        if (!res.ok) {
+          if (!cancelled) setOptions([]);
+          return;
+        }
         const data: LevelOption[] = await res.json();
         if (!cancelled) {
           setOptions(data.filter((o) => !excludeIds.has(o.id)));
           setHighlighted(0);
           setOpen(true);
         }
+      } catch {
+        if (!cancelled) setOptions([]);
       } finally {
         if (!cancelled) setLoading(false);
       }

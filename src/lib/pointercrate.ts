@@ -1,5 +1,13 @@
 const POINTERCRATE_BASE = "https://pointercrate.com/api/v2";
 
+// Cloudflare (which fronts pointercrate.com) is more likely to block/challenge
+// requests with no User-Agent — cloud-provider egress IPs like Vercel's get
+// flagged harder than a browser's. A descriptive UA reduces false positives.
+const REQUEST_HEADERS = {
+  "User-Agent": "ExtremeDemonleBot/1.0 (+https://extremedemle.vercel.app)",
+  Accept: "application/json",
+};
+
 /** The top 150 positions on the list — 1-75 is "Main List", 76-150 is "Extended List". */
 export const MAIN_LIST_SIZE = 75;
 export const EXTENDED_LIST_SIZE = 150;
@@ -37,10 +45,11 @@ export interface PointercrateDemonDetail extends PointercrateDemon {
 async function fetchListedPage(after: number, limit: number): Promise<PointercrateDemon[]> {
   const res = await fetch(
     `${POINTERCRATE_BASE}/demons/listed/?after=${after}&limit=${limit}`,
-    { next: { revalidate: 21600 } } // 6h — the list barely moves within a day
+    { next: { revalidate: 21600 }, headers: REQUEST_HEADERS } // 6h — the list barely moves within a day
   );
   if (!res.ok) {
-    throw new Error(`Pointercrate demons fetch failed: ${res.status}`);
+    const body = await res.text().catch(() => "");
+    throw new Error(`Pointercrate demons fetch failed: ${res.status} ${body.slice(0, 300)}`);
   }
   return res.json();
 }
@@ -63,9 +72,11 @@ export async function getDailyPool(): Promise<PointercrateDemon[]> {
 export async function getDemonDetail(id: number): Promise<PointercrateDemonDetail> {
   const res = await fetch(`${POINTERCRATE_BASE}/demons/${id}/`, {
     next: { revalidate: 21600 },
+    headers: REQUEST_HEADERS,
   });
   if (!res.ok) {
-    throw new Error(`Pointercrate demon detail fetch failed: ${res.status}`);
+    const text = await res.text().catch(() => "");
+    throw new Error(`Pointercrate demon detail fetch failed: ${res.status} ${text.slice(0, 300)}`);
   }
   const body: { data: PointercrateDemonDetail } = await res.json();
   return body.data;

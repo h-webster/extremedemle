@@ -1,5 +1,10 @@
 const AREDL_BASE = "https://api.aredl.net/v2/api";
 
+const REQUEST_HEADERS = {
+  "User-Agent": "ExtremeDemonleBot/1.0 (+https://extremedemle.vercel.app)",
+  Accept: "application/json",
+};
+
 /** The one field we still need AREDL for — pointercrate has no gameplay tags (Wave, Ship, Timings, ...). */
 interface AredlLevel {
   level_id: number;
@@ -14,9 +19,11 @@ interface AredlLevel {
 export async function getAredlTagsByLevelId(): Promise<Map<number, string[]>> {
   const res = await fetch(`${AREDL_BASE}/aredl/levels`, {
     next: { revalidate: 21600 }, // 6h — the list barely moves within a day
+    headers: REQUEST_HEADERS,
   });
   if (!res.ok) {
-    throw new Error(`AREDL levels fetch failed: ${res.status}`);
+    const body = await res.text().catch(() => "");
+    throw new Error(`AREDL levels fetch failed: ${res.status} ${body.slice(0, 300)}`);
   }
   const levels: AredlLevel[] = await res.json();
   const map = new Map<number, string[]>();
