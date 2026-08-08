@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { describeError } from "@/lib/describeError";
 import { getDailyPool } from "@/lib/pointercrate";
 import type { LevelOption } from "@/types/game";
 
-// Experiment: Vercel's Edge Runtime routes through a different network path
-// than serverless Node functions, which may carry different IP reputation
-// with Pointercrate's Cloudflare bot protection (see the 403 "Just a
-// moment..." challenge page diagnosed in the debug field below).
+// Required: pointercrate.com is fronted by Cloudflare, which serves an
+// interactive JS challenge ("Just a moment...", 403) to requests from
+// Vercel's default Node serverless IPs. Edge Runtime routes through a
+// different network path that isn't challenged. Confirmed by testing —
+// don't remove this without re-verifying against production.
 export const runtime = "edge";
 
 const MAX_RESULTS = 8;
@@ -22,11 +22,7 @@ export async function GET(request: NextRequest) {
     pool = await getDailyPool();
   } catch (err) {
     console.error("GET /api/levels: failed to load pool", err);
-    // TEMPORARY: surfacing the real error to diagnose the production 502 — remove once fixed.
-    return NextResponse.json(
-      { error: "Failed to load level pool", debug: describeError(err) },
-      { status: 502 }
-    );
+    return NextResponse.json({ error: "Failed to load level pool" }, { status: 502 });
   }
 
   const starts: LevelOption[] = [];

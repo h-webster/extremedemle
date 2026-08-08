@@ -93,6 +93,18 @@ Relevant endpoints:
 - Main List = position 1–75, Extended List = position 76–150 (`MAIN_LIST_SIZE`/`EXTENDED_LIST_SIZE` in `pointercrate.ts`) — standard Pointercrate convention, not returned by the API itself.
 - `requirement__gt`/`requirement__lt`/`name`/etc. query params exist in the pointercrate source but were confirmed (empirically, by curl) to be silently ignored by the live API — don't rely on server-side filtering beyond `after`/`limit`/`before`.
 
+### Edge Runtime is required, not optional (found 2026-08-08)
+
+`src/app/api/levels/route.ts` and `src/app/api/guess/route.ts` both set `export const runtime = "edge";`. This isn't a style choice — **removing it breaks the app in production.**
+
+pointercrate.com is fronted by Cloudflare, and Cloudflare serves an interactive JS challenge (`403`, `<title>Just a moment...</title>`) to requests from Vercel's default Node serverless function IPs — confirmed by deploying and curling the live endpoint, which returned that exact challenge page. The same code worked perfectly locally (both `next dev` and a real `next build && next start`), so this isn't a code bug; it's IP-reputation-based bot protection on pointercrate's side that only triggers from Vercel's Node runtime's network path. Switching both routes to `runtime = "edge"` — which routes through a different network path — was confirmed via a live redeploy to resolve it; the same code, unchanged otherwise, started working immediately.
+
+Things that were investigated and ruled out or found irrelevant:
+- Adding a `User-Agent`/`Accept` header to the pointercrate/AREDL fetches (kept anyway, in `pointercrate.ts`/`aredl.ts` — harmless, but didn't fix this on its own).
+- Pointercrate's documented authentication (JWT bearer tokens via account login) — that's for account-gated write actions (submitting records, managing the list); the read endpoints we use are explicitly public and unauthenticated, and Cloudflare's challenge happens before a request ever reaches pointercrate's own auth logic anyway, so authenticating as a user wouldn't have helped.
+
+If pointercrate's Cloudflare configuration or Vercel's Edge Runtime networking ever changes and this starts failing again, the fallback options (not yet needed) are: ask the pointercrate team to allowlist the deployment, or proxy the requests through a Cloudflare Worker (Cloudflare-to-Cloudflare traffic isn't scored as bot traffic the way Vercel's IPs are).
+
 ## Data source: AREDL API v2 (secondary — tags cross-reference only)
 
 Base URL: `https://api.aredl.net/v2/api`. Public, no auth required. Since the pivot to Pointercrate, this is used for exactly one thing: Pointercrate has no gameplay-tag concept (Wave, Ship, Timings, etc.), so [src/lib/aredl.ts](src/lib/aredl.ts) fetches `GET /aredl/levels` and builds a `level_id → tags` map, joined against the Pointercrate demon's own `level_id`. AREDL and Pointercrate are separately curated lists, so not every Pointercrate demon has an AREDL match — a miss renders as "no tag data", not an error.

@@ -24,7 +24,7 @@ function nextResetLabel(): string {
 
 function buildShareText(guesses: GuessResponse[], status: "won" | "lost", puzzle: number) {
   const grid = guesses
-    .map((g) => (g.correct ? "🟩" : g.positionDirection === "harder" ? "🟧" : "⬛"))
+    .map((g) => (g.correct ? "🟩" : g.positionDirection === "harder" ? "📈" : "📉"))
     .join("");
   const score = status === "won" ? `${guesses.length}/6` : "X/6";
   return `Extreme Demonle #${puzzle} ${score}\n${grid}`;

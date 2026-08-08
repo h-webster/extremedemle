@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recordCompletion } from "@/lib/completions";
 import { getDailyTarget, todayUTC } from "@/lib/daily";
-import { describeError } from "@/lib/describeError";
 import { buildFullReveal, buildHints } from "@/lib/hints";
 import { MAX_GUESSES, type GuessResponse } from "@/types/game";
 
-// See src/app/api/levels/route.ts for why — testing whether Edge Runtime's
-// network path avoids Pointercrate's Cloudflare bot challenge.
+// See src/app/api/levels/route.ts for why this is required, not optional.
 export const runtime = "edge";
 
 interface GuessBody {
@@ -77,10 +75,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response);
   } catch (err) {
     console.error("POST /api/guess failed", err);
-    // TEMPORARY: surfacing the real error to diagnose the production 502 — remove once fixed.
-    return NextResponse.json(
-      { error: "Failed to process guess", debug: describeError(err) },
-      { status: 502 }
-    );
+    return NextResponse.json({ error: "Failed to process guess" }, { status: 502 });
   }
 }
