@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { describeError } from "@/lib/describeError";
 import { getDailyPool } from "@/lib/pointercrate";
 import type { LevelOption } from "@/types/game";
 
@@ -15,7 +16,11 @@ export async function GET(request: NextRequest) {
     pool = await getDailyPool();
   } catch (err) {
     console.error("GET /api/levels: failed to load pool", err);
-    return NextResponse.json({ error: "Failed to load level pool" }, { status: 502 });
+    // TEMPORARY: surfacing the real error to diagnose the production 502 — remove once fixed.
+    return NextResponse.json(
+      { error: "Failed to load level pool", debug: describeError(err) },
+      { status: 502 }
+    );
   }
 
   const starts: LevelOption[] = [];

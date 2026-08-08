@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recordCompletion } from "@/lib/completions";
 import { getDailyTarget, todayUTC } from "@/lib/daily";
+import { describeError } from "@/lib/describeError";
 import { buildFullReveal, buildHints } from "@/lib/hints";
 import { MAX_GUESSES, type GuessResponse } from "@/types/game";
 
@@ -72,6 +73,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response);
   } catch (err) {
     console.error("POST /api/guess failed", err);
-    return NextResponse.json({ error: "Failed to process guess" }, { status: 502 });
+    // TEMPORARY: surfacing the real error to diagnose the production 502 — remove once fixed.
+    return NextResponse.json(
+      { error: "Failed to process guess", debug: describeError(err) },
+      { status: 502 }
+    );
   }
 }
