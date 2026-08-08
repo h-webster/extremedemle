@@ -5,6 +5,10 @@ import { describeError } from "@/lib/describeError";
 import { buildFullReveal, buildHints } from "@/lib/hints";
 import { MAX_GUESSES, type GuessResponse } from "@/types/game";
 
+// See src/app/api/levels/route.ts for why — testing whether Edge Runtime's
+// network path avoids Pointercrate's Cloudflare bot challenge.
+export const runtime = "edge";
+
 interface GuessBody {
   guessLevelId?: number;
   guessNumber?: number;

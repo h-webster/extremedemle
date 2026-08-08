@@ -3,6 +3,12 @@ import { describeError } from "@/lib/describeError";
 import { getDailyPool } from "@/lib/pointercrate";
 import type { LevelOption } from "@/types/game";
 
+// Experiment: Vercel's Edge Runtime routes through a different network path
+// than serverless Node functions, which may carry different IP reputation
+// with Pointercrate's Cloudflare bot protection (see the 403 "Just a
+// moment..." challenge page diagnosed in the debug field below).
+export const runtime = "edge";
+
 const MAX_RESULTS = 8;
 
 export async function GET(request: NextRequest) {
