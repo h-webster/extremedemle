@@ -71,7 +71,7 @@ const HINTS: HintDef[] = [
         <img
           src={hints.thumbnailUrl}
           alt="Blurred level thumbnail"
-          className="h-full w-full object-cover blur-md"
+          className="h-full w-full object-cover blur-lg"
         />
       ) : (
         "unavailable"
