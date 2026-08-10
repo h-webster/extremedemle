@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Extreme Demonle",
   description:
     "A daily guessing game for the Geometry Dash extreme demon community. Six guesses to name the mystery level from the Pointercrate top 150 demonlist.",
+  icons: {
+    icon: "/extremedemonlelogo-removebg.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

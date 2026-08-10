@@ -13,9 +13,7 @@ function DirectionLabel({ guess }: { guess: GuessResponse }) {
 }
 
 export default function GuessLog({ guesses }: { guesses: GuessResponse[] }) {
-  if (guesses.length === 0) {
-    return <p className="text-[13px] text-text-muted">Your guesses will show up here.</p>;
-  }
+  
 
   return (
     <ol className="border-t border-border">

@@ -1,13 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-
-function LogoMark() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" aria-hidden="true" className="shrink-0">
-      <path d="M15 1.5 L27.5 15 L15 28.5 L2.5 15 Z" fill="#2563eb" />
-      <path d="M15 8.5 L21 15 L15 21.5 L9 15 Z" fill="#ffffff" />
-    </svg>
-  );
-}
 
 function CalendarIcon() {
   return (
@@ -52,7 +44,14 @@ export default function Navbar() {
     <header className="border-b border-border bg-bg">
       <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <LogoMark />
+          <Image
+            src="/extremedemonlelogo-removebg.png"
+            alt="Extreme Demonle"
+            width={28}
+            height={28}
+            className="shrink-0"
+            priority
+          />
           <span className="font-bold text-[15px] tracking-tight text-text-primary">
             Extreme Demonle
           </span>
