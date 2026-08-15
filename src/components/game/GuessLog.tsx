@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import type { GuessResponse } from "@/types/game";
+import { TriangleGlyph } from "@/components/game/glyphs";
 
 function DirectionLabel({ guess }: { guess: GuessResponse }) {
   if (guess.correct) {
@@ -6,21 +8,23 @@ function DirectionLabel({ guess }: { guess: GuessResponse }) {
   }
   const harder = guess.positionDirection === "harder";
   return (
-    <span className="text-[12px] text-text-secondary">
-      {harder ? "↑ ranks harder" : "↓ ranks easier"}
+    <span
+      className="anim-nudge flex items-center gap-1.5 text-[12px] text-text-secondary"
+      style={{ "--nudge-from": harder ? "3px" : "-3px" } as CSSProperties}
+    >
+      <TriangleGlyph direction={harder ? "up" : "down"} />
+      {harder ? "ranks harder" : "ranks easier"}
     </span>
   );
 }
 
 export default function GuessLog({ guesses }: { guesses: GuessResponse[] }) {
-  
-
   return (
     <ol className="border-t border-border">
       {[...guesses].reverse().map((guess) => (
         <li
           key={guess.guessNumber}
-          className="flex items-center justify-between gap-4 border-b border-border py-2.5"
+          className="anim-row-in flex items-center justify-between gap-4 border-b border-border py-2.5"
         >
           <div className="flex min-w-0 items-center gap-3">
             <span className="text-[12px] text-text-muted">{guess.guessNumber}.</span>

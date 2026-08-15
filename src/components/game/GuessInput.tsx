@@ -115,7 +115,7 @@ export default function GuessInput({ disabled, excludeIds, onSubmit }: GuessInpu
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => commit(option)}
                 onMouseEnter={() => setHighlighted(i)}
-                className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] ${
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-[14px] transition-transform duration-100 active:scale-[0.98] ${
                   i === highlighted
                     ? "bg-bg-card-hover text-text-primary"
                     : "text-text-secondary"

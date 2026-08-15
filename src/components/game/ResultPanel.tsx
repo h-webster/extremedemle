@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { GuessResponse } from "@/types/game";
+import { MAX_GUESSES, type GuessResponse } from "@/types/game";
+import { DiamondGlyph, TriangleGlyph } from "@/components/game/glyphs";
 
 interface ResultPanelProps {
   guesses: GuessResponse[];
@@ -27,7 +28,23 @@ function buildShareText(guesses: GuessResponse[], status: "won" | "lost", puzzle
     .map((g) => (g.correct ? "🟩" : g.positionDirection === "harder" ? "📈" : "📉"))
     .join("");
   const score = status === "won" ? `${guesses.length}/6` : "X/6";
-  return `Extreme Demonle #${puzzle} ${score}\n${grid}`;
+  return `Extremle #${puzzle} ${score}\n${grid}`;
+}
+
+function ShareGlyphRow({ guesses }: { guesses: GuessResponse[] }) {
+  return (
+    <div className="flex items-center gap-1.5" aria-hidden="true">
+      {guesses.map((g, i) => (
+        <span key={i} className={g.correct ? "text-correct" : g.positionDirection === "harder" ? "text-accent" : "text-text-muted"}>
+          {g.correct ? (
+            <DiamondGlyph filled />
+          ) : (
+            <TriangleGlyph direction={g.positionDirection === "harder" ? "up" : "down"} />
+          )}
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function ThumbnailFrame({
@@ -52,6 +69,8 @@ function ThumbnailFrame({
 export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPanelProps) {
   const [countdown, setCountdown] = useState("");
   const [copied, setCopied] = useState(false);
+  const [barWidth, setBarWidth] = useState(0);
+  const [displayPercent, setDisplayPercent] = useState(0);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only clock read, avoids SSR/client mismatch
@@ -60,9 +79,41 @@ export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPan
     return () => clearInterval(id);
   }, []);
 
+  useEffect(() => {
+    // rAF so the browser paints the 0% bar first, letting the CSS transition animate the fill.
+    const frame = requestAnimationFrame(() => setBarWidth((guesses.length / MAX_GUESSES) * 100));
+    return () => cancelAnimationFrame(frame);
+  }, [guesses.length]);
+
   const last = guesses[guesses.length - 1];
   const reveal = last?.reveal;
   const completionStats = last?.completionStats;
+  const finalPercent =
+    completionStats && completionStats.played > 0
+      ? Math.round((completionStats.won / completionStats.played) * 100)
+      : 0;
+
+  useEffect(() => {
+    if (!completionStats || completionStats.played === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reduced-motion opt-out: skip the rAF tally and show the final value immediately
+      setDisplayPercent(finalPercent);
+      return;
+    }
+    const duration = 600;
+    const start = performance.now();
+    let frame: number;
+    function tick(now: number) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 2);
+      setDisplayPercent(Math.round(finalPercent * eased));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    }
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-run when the target value itself changes
+  }, [finalPercent]);
+
   if (!reveal) return null;
 
   async function handleShare() {
@@ -78,7 +129,14 @@ export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPan
 
   return (
     <div className="border border-border">
-      <div className="border-b border-border px-4 py-4">
+      <div className="h-1 w-full bg-bg-card">
+        <div
+          className={`result-bar-fill h-full ${status === "won" ? "bg-correct" : "bg-danger"}`}
+          style={{ width: `${barWidth}%` }}
+        />
+      </div>
+
+      <div className="anim-pop-in border-b border-border px-4 py-4">
         <p className={`text-[12px] font-semibold ${status === "won" ? "text-correct" : "text-danger"}`}>
           {status === "won" ? `Solved in ${guesses.length}/6` : "Out of guesses"}
         </p>
@@ -103,9 +161,7 @@ export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPan
 
       {completionStats && completionStats.played > 0 && (
         <div className="border-t border-border px-4 py-4 text-center">
-          <p className="text-3xl font-bold text-accent">
-            {Math.round((completionStats.won / completionStats.played) * 100)}%
-          </p>
+          <p className="text-3xl font-bold text-accent">{displayPercent}%</p>
           <p className="text-[13px] text-text-secondary">of people guessed the level</p>
           <p className="mt-1 text-[11px] text-text-muted">
             ({completionStats.won}/{completionStats.played})
@@ -113,7 +169,11 @@ export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPan
         </div>
       )}
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
+      <div className="border-t border-border px-4 py-3">
+        <ShareGlyphRow guesses={guesses} />
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
         <div>
           <p className="text-[11px] text-text-muted">Next puzzle in</p>
           <p className="text-[14px] font-medium text-text-primary">{countdown}</p>
@@ -121,7 +181,7 @@ export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPan
         <button
           type="button"
           onClick={handleShare}
-          className="border border-border px-4 py-2 text-[13px] font-semibold text-text-primary hover:bg-bg-card-hover active:translate-y-px"
+          className="border border-border px-4 py-2 text-[13px] font-semibold text-text-primary transition-transform duration-100 hover:bg-bg-card-hover active:scale-95"
         >
           {copied ? "Copied!" : "Share result"}
         </button>

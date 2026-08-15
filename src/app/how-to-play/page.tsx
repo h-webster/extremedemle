@@ -1,7 +1,9 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "How to Play — Extreme Demonle",
+  title: "How to Play — Extremle",
+  description:
+    "How to play Extremle: guess the daily Geometry Dash extreme demon in six tries, using hints on list tier, tags, publisher, song, and thumbnail.",
 };
 
 const HINT_SCHEDULE = [
@@ -17,7 +19,7 @@ export default function HowToPlayPage() {
     <div className="mx-auto w-full max-w-xl flex-1 px-4 py-10">
       <h1 className="text-xl font-bold text-text-primary">How to play</h1>
       <p className="mt-3 text-[14px] leading-relaxed text-text-secondary">
-        Every day, Extreme Demonle picks one level from the top 150 of the
+        Every day, Extremle picks one level from the top 150 of the
         Pointercrate demonlist. You have six guesses to name it. Guesses are
         picked from the pointercrate demon list.
       </p>
@@ -54,7 +56,7 @@ export default function HowToPlayPage() {
 
       <Link
         href="/"
-        className="mt-10 inline-block border border-border px-5 py-2.5 text-[14px] font-semibold text-text-primary hover:bg-bg-card-hover"
+        className="mt-10 inline-block border border-border px-5 py-2.5 text-[14px] font-semibold text-text-primary transition-transform duration-100 hover:bg-bg-card-hover active:scale-95"
       >
         Play today&apos;s puzzle
       </Link>

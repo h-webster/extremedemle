@@ -106,7 +106,7 @@ function HintCard({
         <div className="hint-face hint-face-back">
           <span className="hint-face-label">{def.title}</span>
           <div className="text-[13px] leading-snug text-text-primary">
-            {unlocked ? def.render(hints) : null}
+            {unlocked && <div className="hint-pop">{def.render(hints)}</div>}
           </div>
         </div>
       </div>

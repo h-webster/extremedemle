@@ -41,19 +41,19 @@ const ICON_LINKS = [
 
 export default function Navbar() {
   return (
-    <header className="border-b border-border bg-bg">
+    <header className="fixed inset-x-0 top-0 z-30 border-b border-border bg-bg">
       <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/extremedemonlelogo-removebg.png"
-            alt="Extreme Demonle"
+            src="/extremlelogo-removebg.png"
+            alt="Extremle"
             width={28}
             height={28}
             className="shrink-0"
             priority
           />
           <span className="font-bold text-[15px] tracking-tight text-text-primary">
-            Extreme Demonle
+            Extremle
           </span>
         </Link>
 
@@ -64,7 +64,7 @@ export default function Navbar() {
               href={link.href}
               title={link.label}
               aria-label={link.label}
-              className="flex h-9 w-9 items-center justify-center text-text-secondary hover:text-text-primary"
+              className="flex h-9 w-9 items-center justify-center text-text-secondary transition-transform duration-100 hover:text-text-primary active:scale-90"
             >
               <link.icon />
             </Link>

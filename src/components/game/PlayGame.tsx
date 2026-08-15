@@ -5,6 +5,7 @@ import GuessInput from "@/components/game/GuessInput";
 import GuessLog from "@/components/game/GuessLog";
 import HintPanel from "@/components/game/HintPanel";
 import ResultPanel from "@/components/game/ResultPanel";
+import { DiamondGlyph } from "@/components/game/glyphs";
 import { puzzleNumber as computePuzzleNumber, todayLocal } from "@/lib/daily";
 import { getGameState, recordResult, saveGameState } from "@/lib/storage";
 import { MAX_GUESSES, type GuessResponse, type LevelOption, type StoredGameState } from "@/types/game";
@@ -99,9 +100,20 @@ export default function PlayGame({ date: fixedDate, puzzleNumber: fixedPuzzleNum
             {isToday ? "Name today’s extreme demon" : "Name this puzzle’s extreme demon"}
           </h1>
         </div>
-        <span className="text-[13px] text-text-secondary">
-          {status === "playing" ? `${guessesLeft} left` : `${guesses.length}/6 used`}
-        </span>
+        <div className="flex flex-col items-end gap-1.5">
+          <span className="text-[13px] text-text-secondary">
+            {status === "playing" ? `${guessesLeft} left` : `${guesses.length}/6 used`}
+          </span>
+          <div className="flex items-center gap-1" aria-hidden="true">
+            {Array.from({ length: MAX_GUESSES }).map((_, i) => (
+              <DiamondGlyph
+                key={i}
+                filled={i < guesses.length}
+                className={i < guesses.length ? "anim-pip-pop text-accent" : "text-border"}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 py-6">

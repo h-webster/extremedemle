@@ -32,7 +32,7 @@ export default function StatsPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `extreme-demonle-save-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `extremle-save-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     setMessage("Save exported.");
@@ -117,7 +117,7 @@ export default function StatsPage() {
           <button
             type="button"
             onClick={handleImportClick}
-            className="border border-border px-4 py-2 text-[13px] font-semibold text-text-primary hover:bg-bg-card-hover"
+            className="border border-border px-4 py-2 text-[13px] font-semibold text-text-primary transition-transform duration-100 hover:bg-bg-card-hover active:scale-95"
           >
             Import
           </button>
@@ -131,14 +131,14 @@ export default function StatsPage() {
           <button
             type="button"
             onClick={handleExport}
-            className="border border-correct px-4 py-2 text-[13px] font-semibold text-correct hover:bg-correct-soft"
+            className="border border-correct px-4 py-2 text-[13px] font-semibold text-correct transition-transform duration-100 hover:bg-correct-soft active:scale-95"
           >
             Export
           </button>
           <button
             type="button"
             onClick={handleReset}
-            className="border border-danger px-4 py-2 text-[13px] font-semibold text-danger hover:bg-danger-soft"
+            className="border border-danger px-4 py-2 text-[13px] font-semibold text-danger transition-transform duration-100 hover:bg-danger-soft active:scale-95"
           >
             Reset
           </button>
@@ -148,7 +148,7 @@ export default function StatsPage() {
 
       <Link
         href="/"
-        className="mt-10 inline-block border border-border px-5 py-2.5 text-[14px] font-semibold text-text-primary hover:bg-bg-card-hover"
+        className="mt-10 inline-block border border-border px-5 py-2.5 text-[14px] font-semibold text-text-primary transition-transform duration-100 hover:bg-bg-card-hover active:scale-95"
       >
         Back to today&rsquo;s puzzle
       </Link>

@@ -1,9 +1,35 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PlayGame from "@/components/game/PlayGame";
 import { puzzleNumber, todayUTC } from "@/lib/daily";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const LAUNCH_DATE = "2026-08-04";
+
+function formatDateLabel(date: string) {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ date: string }>;
+}): Promise<Metadata> {
+  const { date } = await params;
+  if (!DATE_PATTERN.test(date) || date < LAUNCH_DATE || date > todayUTC()) {
+    return {};
+  }
+  const num = puzzleNumber(date);
+  return {
+    title: `Puzzle #${num} — Extremle`,
+    description: `Replay Extremle puzzle #${num} from ${formatDateLabel(date)} — guess that day's Geometry Dash extreme demon in six tries.`,
+  };
+}
 
 export default async function ArchivePuzzlePage({
   params,

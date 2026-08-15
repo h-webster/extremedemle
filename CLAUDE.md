@@ -1,6 +1,8 @@
-# Extreme Demonle
+# Extremle
 
 A daily Wordle-style guessing game for the Geometry Dash extreme-demon community. Each day there's one secret level, drawn from the top 150 of the [Pointercrate](https://pointercrate.com) demonlist. Players get 6 guesses. Each guess is a full level name (chosen via autocomplete, not typed letter-by-letter), and every guess — right or wrong — reveals a new piece of information about the secret level plus a directional comparison (harder/easier on the list) versus the guess.
+
+**Renamed from "Extreme Demonle" to "Extremle" (2026-08-13, explicit user direction).** Pure branding change — title, nav wordmark, page titles, share text, and package/dev-server identifiers were updated; internal `localStorage`/Redis key prefixes (`demonle:...`) were deliberately left unchanged to preserve existing players' saved stats/streaks and completion counts.
 
 ## Implementation status
 
