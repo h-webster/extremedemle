@@ -27,9 +27,12 @@ export default function GuessLog({ guesses }: { guesses: GuessResponse[] }) {
           className="anim-row-in flex items-center justify-between gap-4 border-b border-border py-2.5"
         >
           <div className="flex min-w-0 items-center gap-3">
-            <span className="text-[12px] text-text-muted">{guess.guessNumber}.</span>
+            <span className="shrink-0 text-[12px] text-text-muted">{guess.guessNumber}.</span>
             <span className="truncate text-[14px] font-medium text-text-primary">
               {guess.guessedLevel.name}
+            </span>
+            <span className="shrink-0 text-[12px] text-text-muted">
+              #{guess.guessedLevel.position}
             </span>
           </div>
           <DirectionLabel guess={guess} />
