@@ -55,6 +55,9 @@ export default function Navbar() {
           <span className="font-bold text-[15px] tracking-tight text-text-primary">
             Extremle
           </span>
+          <span className="hidden text-[12px] text-text-muted sm:inline">
+            &middot; Geometry Dash Extreme Demon Wordle
+          </span>
         </Link>
 
         <nav className="flex items-center gap-1">

@@ -26,8 +26,8 @@ export async function generateMetadata({
   }
   const num = puzzleNumber(date);
   return {
-    title: `Puzzle #${num} — Extremle`,
-    description: `Replay Extremle puzzle #${num} from ${formatDateLabel(date)} — guess that day's Geometry Dash extreme demon in six tries.`,
+    title: `Puzzle #${num} | Extremle`,
+    description: `Replay Extremle puzzle #${num} from ${formatDateLabel(date)}. Guess that day's Geometry Dash extreme demon in six tries.`,
   };
 }
 

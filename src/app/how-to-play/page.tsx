@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "How to Play — Extremle",
+  title: "How to Play | Extremle",
   description:
     "How to play Extremle: guess the daily Geometry Dash extreme demon in six tries, using hints on list tier, tags, publisher, song, and thumbnail.",
 };

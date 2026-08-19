@@ -1,7 +1,7 @@
 const AREDL_BASE = "https://api.aredl.net/v2/api";
 
 const REQUEST_HEADERS = {
-  "User-Agent": "ExtremleBot/1.0 (+https://extremedemle.vercel.app)",
+  "User-Agent": "ExtremleBot/1.0 (+https://extremle.io)",
   Accept: "application/json",
 };
 

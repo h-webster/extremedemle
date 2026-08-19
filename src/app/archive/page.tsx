@@ -1,9 +1,9 @@
 import ArchiveList from "@/app/archive/ArchiveList";
 
 export const metadata = {
-  title: "Archive — Extremle",
+  title: "Archive | Extremle",
   description:
-    "Browse every past Extremle puzzle and replay any day you missed — guess the Geometry Dash extreme demon from that date in six tries.",
+    "Browse every past Extremle puzzle and replay any day you missed. Guess the Geometry Dash extreme demon from that date in six tries.",
 };
 
 export default function ArchivePage() {

@@ -155,7 +155,7 @@ export default function ResultPanel({ guesses, status, puzzleNumber }: ResultPan
 
       {reveal.song && (
         <p className="px-4 pt-2 text-[13px] text-text-secondary">
-          Song &mdash; {reveal.song.name} by {reveal.song.author}
+          Song: {reveal.song.name} by {reveal.song.author}
         </p>
       )}
 

@@ -4,7 +4,7 @@ const POINTERCRATE_BASE = "https://pointercrate.com/api/v2";
 // requests with no User-Agent — cloud-provider egress IPs like Vercel's get
 // flagged harder than a browser's. A descriptive UA reduces false positives.
 const REQUEST_HEADERS = {
-  "User-Agent": "ExtremleBot/1.0 (+https://extremedemle.vercel.app)",
+  "User-Agent": "ExtremleBot/1.0 (+https://extremle.io)",
   Accept: "application/json",
 };
 

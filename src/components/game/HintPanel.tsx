@@ -57,7 +57,7 @@ const HINTS: HintDef[] = [
     threshold: 4,
     title: "Song",
     color: "#db2777",
-    render: (hints) => (hints?.song ? `${hints.song.name} — ${hints.song.author}` : "unavailable"),
+    render: (hints) => (hints?.song ? `${hints.song.name} by ${hints.song.author}` : "unavailable"),
   },
   {
     key: "thumbnail",

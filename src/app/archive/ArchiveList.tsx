@@ -43,7 +43,7 @@ export default function ArchiveList() {
   if (dates.length === 0) {
     return (
       <p className="mt-8 text-[14px] text-text-muted">
-        Puzzle #1 just dropped &mdash; the archive fills in from tomorrow.
+        Puzzle #1 just dropped. The archive fills in from tomorrow.
       </p>
     );
   }
